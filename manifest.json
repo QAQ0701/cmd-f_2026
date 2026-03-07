@@ -3,12 +3,22 @@
   "name": "DoomScroll Terminator",
   "version": "1.0",
   "description": "Terminates the doom scrolling in social media wesite",
+  "permissions": ["storage", "tabs"],
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "*://*.reddit.com/*",
+    "*://*.twitter.com/*",
+    "*://*.instagram.com/*"
+  ],
 
   "icons": {
-    "16": "images/icon-16.png",
-    "32": "images/icon-32.png",
-    "48": "images/icon-48.png",
-    "128": "images/icon-128.png"
+    "16": "images/placeholer image.PNG",
+    "32": "images/placeholer image.PNG",
+    "48": "images/placeholer image.PNG",
+    "128": "images/placeholer image.PNG"
+  },
+  "background": {
+    "service_worker": "scripts/background.js"
   },
   "content_scripts": [
     {

@@ -8,8 +8,10 @@ const roasts = [
 //TODO: universal variables: Time & scroll count
 let scrollCount = 0;
 let elapsedTime = 0;
+const stageTwoScrollLimit = 30;
 let stageTwoTriggered = false;
-
+let shrinkFactor = 0;
+let Boo = false;
 
 // ping background every 10 seconds
 let state = 0;
@@ -56,19 +58,22 @@ window.addEventListener("scroll", () => {
     if (scrollCount % 20 === 0) {
         applyShrink();
     }
-    if (scrollCount > 30 && !stageTwoTriggered) {
+    if (scrollCount > stageTwoScrollLimit && !stageTwoTriggered) {
       stageTwoTriggered = true;
       stageTwo();
       console.log("Stage 2");
+  } if (scrollCount > (stageTwoScrollLimit + 150) && !Boo) {
+      Boo = true;
+      stageFour();
   }
 });
 
 function applyShrink() {
     // Max shrink factor (e.g., 70% of original size)
-    const maxShrink = 0.3;
+    //const maxShrink = 0.3;
     const contents = document.getElementById("contents") ?? document.getElementsByClassName("xw7yly9")[0];
     // Calculate shrink based on scrollCount (1 scroll = tiny shrink)
-    let scale = Math.max(maxShrink, 1 - scrollCount * 0.002); 
+    let scale = Math.max(shrinkFactor, 1 - scrollCount * 0.002); 
 
     // Apply transform to the whole page
 
@@ -124,8 +129,43 @@ function stageTwo() {
   if (exitBtn) {
     exitBtn.addEventListener("click", () => {
       overlay.remove();
+      setTimeout(stageThree, 5000);
     });
   }
+}
+
+function stageThree(){
+  shrinkFactor = 0.3;
+  console.log("Stage 3 shrinking");
+}
+
+function stageFour(){
+  console.log("Stage4 triggered");
+  const overlay = document.createElement("div");
+  const imgURL = chrome.runtime.getURL("images/Boo.gif");
+
+  overlay.innerHTML = `
+    <div style="text-align:center">
+      <img src="${imgURL}" style="max-width:500px;">
+      <br><br>
+    </div>
+  `;
+  
+  overlay.style = `
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color: rgba(0, 0, 0, 1.0);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2147483647;
+  `;
+
+  document.body.appendChild(overlay);
 }
 
 function firstWarning() {

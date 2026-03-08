@@ -43,7 +43,7 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["images/stage2.png", "images/grass.png", "images/avatar128.png"],
+      "resources": ["images/stage2.png", "images/grass.png", "images/avatar128.png", "images/Boo.gif"],
       "matches": [
         "https://www.facebook.com/*",
         "https://www.instagram.com/*",

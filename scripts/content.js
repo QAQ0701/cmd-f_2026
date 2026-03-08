@@ -106,7 +106,7 @@ chrome.runtime.onMessage.addListener((msg) => {
         selectedAvatar = selected; // update global
         chrome.storage.local.set({ selectedAvatar: selected });
         // Now we can safely get the avatar src
-        avatarSrc = getAvatarSrcById(selectedAvatar); 
+        avatarSrc = getAvatarSrcById(selectedAvatar);
         console.log("Avatar source:", avatarSrc);
       });
     }
@@ -137,9 +137,9 @@ chrome.runtime.onMessage.addListener((msg) => {
   if (msg.type === "STAGE_2") {
     // Scroll handling
     window.addEventListener("scroll", () => {
-    scrollCount++;
-    console.log(scrollCount);
-    if (scrollCount % 20 === 0) applyShrink();
+      scrollCount++;
+      console.log(scrollCount);
+      if (scrollCount % 20 === 0) applyShrink();
 
       if (scrollCount > stageTwoScrollLimit && !stageTwoTriggered) {
         stageTwoTriggered = true;
@@ -147,7 +147,7 @@ chrome.runtime.onMessage.addListener((msg) => {
         console.log("Stage 2 triggered");
       }
 
-    if (scrollCount > (stageTwoScrollLimit + 500) && !Boo) {
+      if (scrollCount > stageTwoScrollLimit + 500 && !Boo) {
         Boo = true;
         stageFour();
       }
@@ -247,8 +247,9 @@ function showCustomAlert() {
   document.head.appendChild(style);
 
   // Random roast
+  currentRoastset = roastSet[selectedAvatar];
   document.getElementById("roast_text").textContent =
-    roastSet[selectedAvatar][Math.floor(Math.random() * roasts.length)];
+    currentRoastset[Math.floor(Math.random() * currentRoastset.length)];
 
   document.getElementById("closeAlertBtn").addEventListener("click", () => {
     alertBox.remove();

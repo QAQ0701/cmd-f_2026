@@ -1,67 +1,97 @@
-// background.js
-
+console.log("Background service worker started");
 // Initialize storage on installation
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local.set({ tabTimers: {} });
 });
 
-// Handle PING messages from content scripts
+// Main message router
 chrome.runtime.onMessage.addListener(async (msg, sender) => {
-  if (msg.type !== "PING") return;
+  console.log("Background received message:", msg);
   if (!sender.tab || !sender.tab.id) return;
 
   const tabId = sender.tab.id;
 
-  // Get current timers
+  switch (msg.type) {
+    case "PING":
+      await handlePing(tabId);
+      break;
+
+    case "INITIAL_WARNING":
+      await handleInitialWarning(tabId);
+      break;
+  }
+});
+
+// -----------------------------
+// HANDLERS
+// -----------------------------
+
+async function handlePing(tabId) {
   const { tabTimers = {} } = await chrome.storage.local.get("tabTimers");
 
-  // Initialize tab if it doesn't exist
+  // Initialize tab if needed
   if (!tabTimers[tabId]) {
     tabTimers[tabId] = {
       startTime: Date.now(),
       elapsed: 0,
-      avatarInitialized: false  // track if avatar menu sent
+      avatarInitialized: false,
+      warnings: 0,
     };
   }
 
   const now = Date.now();
   tabTimers[tabId].elapsed = now - tabTimers[tabId].startTime;
 
-  // Persist timers
+  // Save timers
   await chrome.storage.local.set({ tabTimers });
 
-  // Send initialize message ONLY ONCE per tab
+  // Send avatar initialize once
   if (!tabTimers[tabId].avatarInitialized) {
     chrome.tabs.sendMessage(tabId, { type: "initialize" });
+
     tabTimers[tabId].avatarInitialized = true;
     await chrome.storage.local.set({ tabTimers });
+
     console.log(`Sent initialize message to tab ${tabId}`);
   }
 
-  // Send elapsed time back to content script
-  chrome.tabs.sendMessage(tabId, { type: "ELAPSED_TIME", elapsed: tabTimers[tabId].elapsed });
-  console.log(`Sent elapsed time to tab ${tabId}:`, tabTimers[tabId].elapsed);
+  // Send elapsed time
+  chrome.tabs.sendMessage(tabId, {
+    type: "ELAPSED_TIME",
+    elapsed: tabTimers[tabId].elapsed,
+  });
 
-  const time = tabTimers[tabId].elapsed;
-  if (time >= 20*1000 && time <= 40*1000) { // 20s - 40s
-    chrome.tabs.sendMessage(tabId, { type: "ROAST" });
-    console.log(`Tab ${tabId} roasted!`);
-  }
- if (time >= 40*1000 && time <= 60*1000) { // 50s - 60s
+  console.log(`Sent elapsed time to tab ${tabId}:`, tabTimers[tabId].elapsed);
+}
+
+async function handleInitialWarning(tabId) {
+  const { tabTimers = {} } = await chrome.storage.local.get("tabTimers");
+
+  if (!tabTimers[tabId]) return;
+
+  tabTimers[tabId].warnings = (tabTimers[tabId].warnings || 0) + 1;
+
+  console.log(`Tab ${tabId}: Initial Warning received`);
+  console.log(`Tab ${tabId}: Number of Warnings ${tabTimers[tabId].warnings}`);
+
+  if (tabTimers[tabId].warnings == 3) {
     chrome.tabs.sendMessage(tabId, { type: "STAGE_2" });
     console.log(`Tab ${tabId}: Stage 2!`);
   }
- if (time >= 70*1000 && time <= 90*1000) { // 70s - 90s
-    chrome.tabs.sendMessage(tabId, { type: "STAGE_3" });
-    console.log(`Tab ${tabId}: Stage 3!`);
-  }
-});
 
-// Clean up timers when a tab closes
+  await chrome.storage.local.set({ tabTimers });
+}
+
+// -----------------------------
+// CLEANUP
+// -----------------------------
+
 chrome.tabs.onRemoved.addListener((tabId) => {
   chrome.storage.local.get("tabTimers", ({ tabTimers = {} }) => {
     delete tabTimers[tabId];
+
     chrome.storage.local.set({ tabTimers });
+
     console.log(`Cleaned up tabTimer for tab ${tabId}`);
   });
 });

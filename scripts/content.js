@@ -69,16 +69,22 @@ const avatarList = [
     alt: "asian mom avatar",
   },
 ];
+const WINDOW_TIME = 30000; // 30 seconds
+const HIT_THRESHOLD = 200; // adjust for sensitivity
 
 // Universal variables
 let scrollCount = 0;
+let scrollCountStage1 = 0;
+let bottomHits = [];
 let elapsedTime = 0;
-const stageTwoScrollLimit = 30;
+const stageTwoScrollLimit = 100;
 let stageTwoTriggered = false;
 let shrinkFactor = 0;
 let Boo = false;
 let selectedAvatar = null;
 let avatarSrc = null;
+let worldState = 0;
+let currentRoastset = roastSet["default"];
 
 // Ping background every 5 seconds
 const pingInterval = setInterval(() => {
@@ -108,16 +114,41 @@ chrome.runtime.onMessage.addListener((msg) => {
         // Now we can safely get the avatar src
         avatarSrc = getAvatarSrcById(selectedAvatar);
         console.log("Avatar source:", avatarSrc);
+        worldState = 1;
       });
     }
   }
 
-  if (msg.type === "ROAST") {
-    firstWarning();
-  }
+  window.addEventListener("scroll", () => {
+    if (worldState == 1) {
+      scrollCountStage1++;
+      //   console.log("scrollCountStage1", scrollCountStage1);
+      const nearBottom =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 20;
+
+      if (nearBottom) {
+        const now = Date.now();
+        bottomHits.push(now);
+
+        // keep only hits within last 30 seconds
+        bottomHits = bottomHits.filter((t) => now - t < WINDOW_TIME);
+        console.log("Bottom hits:", bottomHits.length);
+
+        if (bottomHits.length >= HIT_THRESHOLD) {
+          bottomHits = []; // reset so it doesn't spam
+          chrome.runtime.sendMessage({ type: "INITIAL_WARNING" });
+          console.log("Initial warning sent");
+          firstWarning();
+        }
+      }
+    }
+  });
 
   if (msg.type === "STAGE_2") {
+    console.log("Stage 2 message received");
     // Scroll handling
+    worldState = 2;
+    console.log("World state changed to:", worldState);
     window.addEventListener("scroll", () => {
       scrollCount++;
       console.log(scrollCount);
@@ -284,8 +315,8 @@ function stageFour() {
   console.log("Stage4 triggered");
   const overlay = document.createElement("div");
   const imgURL = chrome.runtime.getURL("images/Boo.gif");
-  const numScrolls = scrollCount / 10;
-  const timeSpent = elapsedTime/60000;
+  const numScrolls = scrollCount / 25 + scrollCountStage1 / 25;
+  const timeSpent = elapsedTime / 60000;
   const style = document.createElement("style");
 
   style.textContent = `

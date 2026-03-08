@@ -226,28 +226,55 @@ function stageThree() {
   console.log("Stage 3 shrinking");
 }
 
-function stageFour() {
-  if (document.getElementById("stageFourOverlay")) return; // prevent duplicates
+function stageFour(){
+  console.log("Stage4 triggered");
   const overlay = document.createElement("div");
-  overlay.id = "stageFourOverlay";
+  const imgURL = chrome.runtime.getURL("images/Boo.gif");
+
+  const style = document.createElement("style");
+
+style.textContent = `
+@font-face {
+  font-family: "ScreamAgain";
+  src: url("${chrome.runtime.getURL("fonts/ScreamAgain.ttf")}") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+#doomTitle {
+  font-family: "ScreamAgain", sans-serif;
+}
+`;
+
+document.head.appendChild(style);
+
+  overlay.innerHTML = `
+    <div style="text-align:center">
+    <h1 id="doomTitle" style="font-size:50px;"> Your screen is mine now</h1>
+      <img src="${imgURL}" style="max-width:500px;">
+      <br><br>
+    </div>
+  `;
+  
   overlay.style = `
     position:fixed;
     top:0;
     left:0;
     width:100%;
     height:100%;
-    background: rgba(0,0,0,1);
+    background-color: rgba(0, 0, 0, 1.0);
+    color:white;
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
     z-index:2147483647;
   `;
-  overlay.innerHTML = `
-    <div style="text-align:center;">
-      <img src="${chrome.runtime.getURL('images/Boo.gif')}" style="max-width:500px;"><br><br>
-    </div>
-  `;
+
   document.body.appendChild(overlay);
+}
+
+function firstWarning() {
+  showCustomAlert();
 }
 
 // Avatar menu

@@ -55,7 +55,8 @@
         "images/avatar_profile_snape.png",
         "images/avatar_profile_miku.png",
         "images/avatar_profile_default.png",
-        "images/avatar_profile_asian_mom.png"
+        "images/avatar_profile_asian_mom.png",
+        "fonts/ScreamAgain.ttf"
       ],
       "matches": [
         "https://www.facebook.com/*",

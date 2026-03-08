@@ -6,6 +6,8 @@ const roasts = [
  "Go touch Grass"
 ];
 //TODO: universal variables: Time & scroll count
+let scrollCount = 0;
+let elapsedTime = 0;
 // ping background every 10 seconds
 let state = 0;
 const pingInterval = setInterval(() => {
@@ -15,25 +17,24 @@ const pingInterval = setInterval(() => {
     console.log("Extension context invalidated. Stopping ping.");
     clearInterval(pingInterval);
   }
-}, 10000);
+}, 5000);
 
 // listen for roast message
 chrome.runtime.onMessage.addListener((msg) => {
+  if (msg.type === "ELAPSED_TIME") {
+    console.log(`Elapsed time for this tab: ${msg.elapsed} ms`);
+    elapsedTime = msg.elapsed;
+    // You can also update a UI element here if you want
+  }
 
   if (msg.type === "ROAST") {
-
     const overlay = document.createElement("div");
-
-    overlay.innerText = roasts[Math.floor(Math.random()*roasts.length)];
-
+    overlay.innerText = "Stop doomscrolling!";
     overlay.style = `
-      position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:50%;
-      background:black;
-      color:white;
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:50%;
+      background:black; color:white;
       font-size:40px;
       display:flex;
       align-items:center;
@@ -41,19 +42,14 @@ chrome.runtime.onMessage.addListener((msg) => {
       z-index:999999;
       text-align:center;
     `;
-
     document.body.appendChild(overlay);
-
   }
-
 });
-
-let scrollCount = 0;
 
 window.addEventListener("scroll", () => {
     scrollCount++;
     console.log("Scroll count:", scrollCount);
-    if (scrollCount % 10 === 0) {
+    if (scrollCount % 100 === 0) {
         applyShrink();
     }
 

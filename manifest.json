@@ -43,10 +43,7 @@
 
   "web_accessible_resources": [
     {
-      "resources": [
-        "images/*",
-        "fonts/ScreamAgain.ttf"
-      ],
+      "resources": ["images/*", "fonts/ScreamAgain.ttf", "audio/*"],
       "matches": [
         "https://www.facebook.com/*",
         "https://www.instagram.com/*",

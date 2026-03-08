@@ -313,6 +313,14 @@ function stageThree() {
 
 function stageFour() {
   console.log("Stage4 triggered");
+
+  // Play looping sound effect
+  const doomSound = new Audio(chrome.runtime.getURL("audio/happyhappy.mp3"));
+  doomSound.volume = 0.5;   // optional volume
+  doomSound.loop = true;    // makes it repeat indefinitely
+  doomSound.play().catch((e) => console.log("Sound play error:", e));
+
+
   const overlay = document.createElement("div");
   const imgURL = chrome.runtime.getURL("images/Boo.gif");
   const numScrolls = scrollCount / 25 + scrollCountStage1 / 25;

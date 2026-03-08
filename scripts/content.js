@@ -106,29 +106,11 @@ chrome.runtime.onMessage.addListener((msg) => {
         selectedAvatar = selected; // update global
         chrome.storage.local.set({ selectedAvatar: selected });
         // Now we can safely get the avatar src
-        avatarSrc = getAvatarSrcById(selectedAvatar); 
+        avatarSrc = getAvatarSrcById(selectedAvatar);
         console.log("Avatar source:", avatarSrc);
       });
     }
   }
-  //   if (msg.type === "initialize") {
-  //     // Only show avatar menu if not already created
-  //     if (!document.getElementById("avatarMenuContainer")) {
-  //       console.log("Prompt avatar choice");
-
-  //       if (document.readyState === "loading") {
-  //         createAvatarMenu(avatarList, document.body, (selected) => {
-  //           console.log("Selected avatar:", selected);
-  //           chrome.storage.local.set({ selectedAvatar: selected });
-  //         });
-  //       } else {
-  //         createAvatarMenu(avatarList, document.body, (selected) => {
-  //           console.log("Selected avatar:", selected);
-  //           chrome.storage.local.set({ selectedAvatar: selected });
-  //         });
-  //       }
-  //     }
-  //   }
 
   if (msg.type === "ROAST") {
     firstWarning();
@@ -137,9 +119,9 @@ chrome.runtime.onMessage.addListener((msg) => {
   if (msg.type === "STAGE_2") {
     // Scroll handling
     window.addEventListener("scroll", () => {
-    scrollCount++;
-    console.log(scrollCount);
-    if (scrollCount % 20 === 0) applyShrink();
+      scrollCount++;
+      console.log(scrollCount);
+      if (scrollCount % 20 === 0) applyShrink();
 
       if (scrollCount > stageTwoScrollLimit && !stageTwoTriggered) {
         stageTwoTriggered = true;
@@ -147,7 +129,7 @@ chrome.runtime.onMessage.addListener((msg) => {
         console.log("Stage 2 triggered");
       }
 
-    if (scrollCount > (stageTwoScrollLimit + 500) && !Boo) {
+      if (scrollCount > stageTwoScrollLimit + 250 && !Boo) {
         Boo = true;
         stageFour();
       }
@@ -161,23 +143,6 @@ chrome.runtime.onMessage.addListener((msg) => {
   //     stageFour();
   //   }
 });
-
-// Scroll handling
-// window.addEventListener("scroll", () => {
-//   scrollCount++;
-//   if (scrollCount % 20 === 0) applyShrink();
-
-//   if (scrollCount > stageTwoScrollLimit && !stageTwoTriggered) {
-//     stageTwoTriggered = true;
-//     stageTwo();
-//     console.log("Stage 2 triggered");
-//   }
-
-//   if (scrollCount > (stageTwoScrollLimit + 150) && !Boo) {
-//     Boo = true;
-//     stageFour();
-//   }
-// });
 
 function applyShrink() {
   const contents =
@@ -247,8 +212,9 @@ function showCustomAlert() {
   document.head.appendChild(style);
 
   // Random roast
+  currentRoastset = roastSet[selectedAvatar];
   document.getElementById("roast_text").textContent =
-    roastSet[selectedAvatar][Math.floor(Math.random() * roasts.length)];
+    currentRoastset[Math.floor(Math.random() * currentRoastset.length)];
 
   document.getElementById("closeAlertBtn").addEventListener("click", () => {
     alertBox.remove();

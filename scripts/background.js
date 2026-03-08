@@ -26,13 +26,13 @@ chrome.runtime.onMessage.addListener(async (msg, sender) => {
   // Send elapsed time back to content script
   chrome.tabs.sendMessage(tabId, { type: "ELAPSED_TIME", elapsed: tabTimers[tabId].elapsed });
   console.log(`Sent elapsed time to tab ${tabId}`, tabTimers[tabId].elapsed);
-
+  time = Math.floor(tabTimers[tabId].elapsed);
   // Optional: trigger ROAST if threshold exceeded
-  if (tabTimers[tabId].elapsed > 10000) { // 1 second
-    chrome.tabs.sendMessage(tabId, { type: "ROAST" });
-    console.log(`Tab ${tabId} roasted!`);
-  }
-});
+  if (time <= 30000 && time >= 5000) { // 30000ms = 30s
+        chrome.tabs.sendMessage(tabId, { type: "ROAST" });
+        console.log(`Tab ${tabId} roasted!`);
+}
+}); 
 
 // Clean up timers when a tab closes
 chrome.tabs.onRemoved.addListener((tabId) => {

@@ -3,7 +3,9 @@
   "name": "DoomScroll Terminator",
   "version": "1.0",
   "description": "Terminates the doom scrolling in social media wesite",
+
   "permissions": ["storage", "tabs", "alarms", "notifications"],
+
   "host_permissions": [
     "*://*.youtube.com/*",
     "*://*.reddit.com/*",
@@ -17,12 +19,13 @@
     "48": "images/avatar48.PNG",
     "128": "images/avatar128.PNG"
   },
+
   "background": {
     "service_worker": "scripts/background.js"
   },
+
   "content_scripts": [
     {
-      "js": ["scripts/content.js"],
       "matches": [
         "https://www.facebook.com/*",
         "https://www.instagram.com/*",
@@ -32,13 +35,17 @@
         "https://www.snapchat.com/*",
         "https://www.reddit.com/*",
         "https://www.tumblr.com/*"
-      ]
+      ],
+      "js": ["scripts/content.js"],
+      "type": "module"
     }
   ],
-    "web_accessible_resources": [
+
+  "web_accessible_resources": [
     {
-      "resources": ["images/stage2.png", "images/grass.png"],
-      "matches": [        "https://www.facebook.com/*",
+      "resources": ["images/stage2.png", "images/grass.png", "images/avatar128.png"],
+      "matches": [
+        "https://www.facebook.com/*",
         "https://www.instagram.com/*",
         "https://x.com/*",
         "https://www.youtube.com/*",

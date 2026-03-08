@@ -261,6 +261,11 @@ function getAvatarSrcById(id) {
 console.log("Avatar source:", getAvatarSrcById(selectedAvatar));
 // Stage overlays
 function stageTwo() {
+  // Play looping sound effect
+  doomSound = new Audio(chrome.runtime.getURL("audio/spongebob.mp3"));
+  doomSound.volume = 0.8; // optional volume
+  doomSound.loop = true; // makes it repeat indefinitely
+  doomSound.play().catch((e) => console.log("Sound play error:", e));
   if (document.getElementById("stageTwoOverlay")) return; // prevent duplicates
 
   let imgURL;
@@ -301,6 +306,11 @@ function stageTwo() {
   document.body.appendChild(overlay);
 
   document.getElementById("exitBtn").addEventListener("click", () => {
+    if (doomSound) {
+      doomSound.pause();
+      doomSound.currentTime = 0;
+      doomSound = null; // clear reference
+    }
     overlay.remove();
     setTimeout(stageThree, 5000);
   });
@@ -316,10 +326,9 @@ function stageFour() {
 
   // Play looping sound effect
   const doomSound = new Audio(chrome.runtime.getURL("audio/happyhappy.mp3"));
-  doomSound.volume = 0.5;   // optional volume
-  doomSound.loop = true;    // makes it repeat indefinitely
+  doomSound.volume = 0.7; // optional volume
+  doomSound.loop = true; // makes it repeat indefinitely
   doomSound.play().catch((e) => console.log("Sound play error:", e));
-
 
   const overlay = document.createElement("div");
   const imgURL = chrome.runtime.getURL("images/Boo.gif");

@@ -42,11 +42,18 @@ chrome.runtime.onMessage.addListener(async (msg, sender) => {
   chrome.tabs.sendMessage(tabId, { type: "ELAPSED_TIME", elapsed: tabTimers[tabId].elapsed });
   console.log(`Sent elapsed time to tab ${tabId}:`, tabTimers[tabId].elapsed);
 
-  // Optional: trigger ROAST if threshold exceeded
   const time = tabTimers[tabId].elapsed;
-  if (time >= 5000 && time <= 30000) { // 5s - 30s
+  if (time >= 20*1000 && time <= 40*1000) { // 20s - 40s
     chrome.tabs.sendMessage(tabId, { type: "ROAST" });
     console.log(`Tab ${tabId} roasted!`);
+  }
+ if (time >= 40*1000 && time <= 60*1000) { // 50s - 60s
+    chrome.tabs.sendMessage(tabId, { type: "STAGE_2" });
+    console.log(`Tab ${tabId}: Stage 2!`);
+  }
+ if (time >= 70*1000 && time <= 90*1000) { // 70s - 90s
+    chrome.tabs.sendMessage(tabId, { type: "STAGE_3" });
+    console.log(`Tab ${tabId}: Stage 3!`);
   }
 });
 

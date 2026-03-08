@@ -67,24 +67,50 @@ chrome.runtime.onMessage.addListener((msg) => {
   if (msg.type === "ROAST") {
     firstWarning();
   }
+
+  if (msg.type === "STAGE_2") {
+        // Scroll handling
+    window.addEventListener("scroll", () => {
+    scrollCount++;
+    if (scrollCount % 20 === 0) applyShrink();
+
+    if (scrollCount > stageTwoScrollLimit && !stageTwoTriggered) {
+        stageTwoTriggered = true;
+        stageTwo();
+        console.log("Stage 2 triggered");
+    }
+
+    if (scrollCount > (stageTwoScrollLimit + 150) && !Boo) {
+        Boo = true;
+        stageFour();
+    }
+  });
+  }
+
+//   if (msg.type === "STAGE_3") {
+//     stageThree();
+//   }
+//   if (msg.type === "STAGE_4") {
+//     stageFour();
+//   }
 });
 
 // Scroll handling
-window.addEventListener("scroll", () => {
-  scrollCount++;
-  if (scrollCount % 20 === 0) applyShrink();
+// window.addEventListener("scroll", () => {
+//   scrollCount++;
+//   if (scrollCount % 20 === 0) applyShrink();
 
-  if (scrollCount > stageTwoScrollLimit && !stageTwoTriggered) {
-    stageTwoTriggered = true;
-    stageTwo();
-    console.log("Stage 2 triggered");
-  }
+//   if (scrollCount > stageTwoScrollLimit && !stageTwoTriggered) {
+//     stageTwoTriggered = true;
+//     stageTwo();
+//     console.log("Stage 2 triggered");
+//   }
 
-  if (scrollCount > (stageTwoScrollLimit + 150) && !Boo) {
-    Boo = true;
-    stageFour();
-  }
-});
+//   if (scrollCount > (stageTwoScrollLimit + 150) && !Boo) {
+//     Boo = true;
+//     stageFour();
+//   }
+// });
 
 function applyShrink() {
   const contents = document.getElementById("contents") ?? document.getElementsByClassName("xw7yly9")[0];

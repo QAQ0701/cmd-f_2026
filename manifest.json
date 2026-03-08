@@ -12,10 +12,10 @@
   ],
 
   "icons": {
-    "16": "images/placeholer image.PNG",
-    "32": "images/placeholer image.PNG",
-    "48": "images/placeholer image.PNG",
-    "128": "images/placeholer image.PNG"
+    "16": "images/avatar16.PNG",
+    "32": "images/avatar32.PNG",
+    "48": "images/avatar48.PNG",
+    "128": "images/avatar128.PNG"
   },
   "background": {
     "service_worker": "scripts/background.js"

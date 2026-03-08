@@ -34,5 +34,19 @@
         "https://www.tumblr.com/*"
       ]
     }
+  ],
+    "web_accessible_resources": [
+    {
+      "resources": ["images/stage2.png", "images/grass.png"],
+      "matches": [        "https://www.facebook.com/*",
+        "https://www.instagram.com/*",
+        "https://x.com/*",
+        "https://www.youtube.com/*",
+        "https://www.tiktok.com/*",
+        "https://www.snapchat.com/*",
+        "https://www.reddit.com/*",
+        "https://www.tumblr.com/*"
+      ]
+    }
   ]
 }

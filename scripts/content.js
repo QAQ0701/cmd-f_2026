@@ -8,6 +8,9 @@ const roasts = [
 //TODO: universal variables: Time & scroll count
 let scrollCount = 0;
 let elapsedTime = 0;
+let stageTwoTriggered = false;
+
+
 // ping background every 10 seconds
 let state = 0;
 const pingInterval = setInterval(() => {
@@ -49,22 +52,27 @@ chrome.runtime.onMessage.addListener((msg) => {
 window.addEventListener("scroll", () => {
     scrollCount++;
     console.log("Scroll count:", scrollCount);
-    if (scrollCount % 100 === 0) {
+    if (scrollCount % 20 === 0) {
         applyShrink();
     }
-
+    if (scrollCount > 150 && !stageTwoTriggered) {
+      stageTwoTriggered = true;
+      stageTwo();
+      console.log("Stage 2");
+  }
 });
 
 function applyShrink() {
     // Max shrink factor (e.g., 70% of original size)
     const maxShrink = 0.3;
-    
+    const contents = document.getElementById("contents") ?? document.getElementsByClassName("xw7yly9")[0];
     // Calculate shrink based on scrollCount (1 scroll = tiny shrink)
     let scale = Math.max(maxShrink, 1 - scrollCount * 0.002); 
 
     // Apply transform to the whole page
-    document.body.style.transform = `scale(${scale})`;
-    document.body.style.transformOrigin = "top center";
+
+    contents.style.transform = `scale(${scale})`;
+    contents.style.transformOrigin = "top center";
 }
 
 
@@ -72,3 +80,45 @@ function applyShrink() {
 //TODO: Warning function (stage 1: first 30s, 1 alert/10s roast from roasts list)
 //TODO: Overlay Function (stage 2: touchgrass to exit)
 //TODO: Final Notice (stage 3: start 5s after stage 2)
+
+function stageTwo() {
+  console.log("Stage2 triggered");
+  const overlay = document.createElement("div");
+  const imgURL = chrome.runtime.getURL("images/stage2.png");
+  const imgGrass = chrome.runtime.getURL("images/grass.png");
+
+  overlay.innerHTML = `
+    <div style="text-align:center">
+      <h1>Go Touch Grass</h1>
+      <img src="${imgURL}" style="max-width:300px;">
+      <br><br>
+      <button id="exitBtn"> I touched grass
+        <img src="${imgGrass}" style="max-width:100px;">
+      </button>
+    </div>
+  `;
+  
+  overlay.style = `
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:black;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2147483647;
+  `;
+
+  document.body.appendChild(overlay);
+
+  const exitBtn = document.getElementById("exitBtn");
+
+  if (exitBtn) {
+    exitBtn.addEventListener("click", () => {
+      overlay.remove();
+    });
+  }
+}

@@ -106,7 +106,7 @@ chrome.runtime.onMessage.addListener((msg) => {
         selectedAvatar = selected; // update global
         chrome.storage.local.set({ selectedAvatar: selected });
         // Now we can safely get the avatar src
-        avatarSrc = getAvatarSrcById(selectedAvatar);
+        avatarSrc = getAvatarSrcById(selectedAvatar); 
         console.log("Avatar source:", avatarSrc);
       });
     }
@@ -137,9 +137,9 @@ chrome.runtime.onMessage.addListener((msg) => {
   if (msg.type === "STAGE_2") {
     // Scroll handling
     window.addEventListener("scroll", () => {
-      scrollCount++;
-      console.log(scrollCount);
-      if (scrollCount % 20 === 0) applyShrink();
+    scrollCount++;
+    console.log(scrollCount);
+    if (scrollCount % 20 === 0) applyShrink();
 
       if (scrollCount > stageTwoScrollLimit && !stageTwoTriggered) {
         stageTwoTriggered = true;
@@ -147,7 +147,7 @@ chrome.runtime.onMessage.addListener((msg) => {
         console.log("Stage 2 triggered");
       }
 
-      if (scrollCount > stageTwoScrollLimit + 500 && !Boo) {
+    if (scrollCount > (stageTwoScrollLimit + 500) && !Boo) {
         Boo = true;
         stageFour();
       }
@@ -247,9 +247,8 @@ function showCustomAlert() {
   document.head.appendChild(style);
 
   // Random roast
-  currentRoastset = roastSet[selectedAvatar];
   document.getElementById("roast_text").textContent =
-    currentRoastset[Math.floor(Math.random() * currentRoastset.length)];
+    roastSet[selectedAvatar][Math.floor(Math.random() * roasts.length)];
 
   document.getElementById("closeAlertBtn").addEventListener("click", () => {
     alertBox.remove();
@@ -267,6 +266,19 @@ console.log("Avatar source:", getAvatarSrcById(selectedAvatar));
 function stageTwo() {
   if (document.getElementById("stageTwoOverlay")) return; // prevent duplicates
 
+  let imgURL;
+  if (selectedAvatar == "your_boss") {
+    imgURL = chrome.runtime.getURL("images/Stage2Boss.png");
+  } else if (selectedAvatar == "miku") {
+    imgURL = chrome.runtime.getURL("images/Stage2Miku.png");
+  } else if (selectedAvatar == "snape") {
+    imgURL = chrome.runtime.getURL("images/Stage2Snape.png");
+  } else if (selectedAvatar == "asian_mom") {
+    imgURL = chrome.runtime.getURL("images/Stage2Mom.png");
+  } else {
+    imgURL = chrome.runtime.getURL("images/Stage2Default.png");
+  }
+
   const overlay = document.createElement("div");
   overlay.id = "stageTwoOverlay";
   overlay.style = `
@@ -283,7 +295,7 @@ function stageTwo() {
   `;
   overlay.innerHTML = `
     <div style="text-align:center;">
-      <img src="${chrome.runtime.getURL("images/stage2.png")}" style="max-width:500px;"><br><br>
+      <img src="${imgURL}" style="max-width:500px;"><br><br>
       <button id="exitBtn" style="border:none; background:none; cursor:pointer;">
         <img src="${chrome.runtime.getURL("images/grass.png")}" style="width:250px; height:auto; display:block;">
       </button>

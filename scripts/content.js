@@ -72,6 +72,7 @@ chrome.runtime.onMessage.addListener((msg) => {
         // Scroll handling
     window.addEventListener("scroll", () => {
     scrollCount++;
+    console.log(scrollCount);
     if (scrollCount % 20 === 0) applyShrink();
 
     if (scrollCount > stageTwoScrollLimit && !stageTwoTriggered) {
@@ -80,7 +81,7 @@ chrome.runtime.onMessage.addListener((msg) => {
         console.log("Stage 2 triggered");
     }
 
-    if (scrollCount > (stageTwoScrollLimit + 150) && !Boo) {
+    if (scrollCount > (stageTwoScrollLimit + 500) && !Boo) {
         Boo = true;
         stageFour();
     }
@@ -222,7 +223,7 @@ function stageTwo() {
 }
 
 function stageThree() {
-  shrinkFactor = 0.3;
+  shrinkFactor = 0.5;
   console.log("Stage 3 shrinking");
 }
 
@@ -243,6 +244,8 @@ style.textContent = `
 
 #doomTitle {
   font-family: "ScreamAgain", sans-serif;
+  color: white !important;
+  font-size: 50px;
 }
 `;
 
@@ -250,7 +253,7 @@ document.head.appendChild(style);
 
   overlay.innerHTML = `
     <div style="text-align:center">
-    <h1 id="doomTitle" style="font-size:50px;"> Your screen is mine now</h1>
+    <h1 id="doomTitle"> Your screen is mine now</h1>
       <img src="${imgURL}" style="max-width:500px;">
       <br><br>
     </div>

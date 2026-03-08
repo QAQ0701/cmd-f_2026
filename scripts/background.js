@@ -14,6 +14,9 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
 
     if (timePerTab[tabId] > 10) { // 20 s for testing
       chrome.tabs.sendMessage(tabId, { type: "ROAST" });
+      console.log("Sent roast message to tab", tabId);
     }
   }
 });
+
+// Todo: setup time tracker

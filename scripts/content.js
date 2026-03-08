@@ -1,4 +1,13 @@
+const roasts = [
+ "You said one video.",
+ "Your ancestors hunted mammoths.",
+ "Close the tab.",
+ "This is your intervention.",
+ "Go touch Grass"
+];
+//TODO: universal variables: Time & scroll count
 // ping background every 10 seconds
+let state = 0;
 const pingInterval = setInterval(() => {
   try {
     chrome.runtime.sendMessage({ type: "PING" });
@@ -7,14 +16,6 @@ const pingInterval = setInterval(() => {
     clearInterval(pingInterval);
   }
 }, 10000);
-
-const roasts = [
- "You said one video.",
- "Your ancestors hunted mammoths.",
- "Close the tab.",
- "This is your intervention.",
- "Go touch Grass"
-];
 
 // listen for roast message
 chrome.runtime.onMessage.addListener((msg) => {
@@ -69,3 +70,9 @@ function applyShrink() {
     document.body.style.transform = `scale(${scale})`;
     document.body.style.transformOrigin = "top center";
 }
+
+
+//TODO: Doomscroll detection function
+//TODO: Warning function (stage 1: first 30s, 1 alert/10s roast from roasts list)
+//TODO: Overlay Function (stage 2: touchgrass to exit)
+//TODO: Final Notice (stage 3: start 5s after stage 2)

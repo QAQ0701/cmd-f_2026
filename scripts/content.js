@@ -1,42 +1,49 @@
-let startTime = Date.now();
-
-setInterval(() => {
-
-    if (!chrome.runtime?.id) return;
-
-    let timeSpent = Math.floor((Date.now() - startTime) / 1000);
-
-    chrome.runtime.sendMessage({
-        type: "TIME_UPDATE",
-        time: timeSpent
-    });
-
+// ping background every 10 seconds
+const pingInterval = setInterval(() => {
+  try {
+    chrome.runtime.sendMessage({ type: "PING" });
+  } catch (e) {
+    console.log("Extension context invalidated. Stopping ping.");
+    clearInterval(pingInterval);
+  }
 }, 10000);
 
-chrome.runtime.onMessage.addListener((message) => {
+const roasts = [
+ "You said one video.",
+ "Your ancestors hunted mammoths.",
+ "Close the tab.",
+ "This is your intervention.",
+ "Go touch Grass"
+];
 
-    if (message.type === "SHOW_ROAST") {
+// listen for roast message
+chrome.runtime.onMessage.addListener((msg) => {
 
-        const roast = document.createElement("div");
+  if (msg.type === "ROAST") {
 
-        roast.innerText =
-        "You have been scrolling for 5 minutes. Touch grass.";
+    const overlay = document.createElement("div");
 
-        roast.style.position = "fixed";
-        roast.style.top = "0";
-        roast.style.left = "0";
-        roast.style.width = "100%";
-        roast.style.height = "100%";
-        roast.style.background = "rgba(0,0,0,0.9)";
-        roast.style.color = "white";
-        roast.style.fontSize = "40px";
-        roast.style.display = "flex";
-        roast.style.alignItems = "center";
-        roast.style.justifyContent = "center";
-        roast.style.zIndex = "999999";
+    overlay.innerText = roasts[Math.floor(Math.random()*roasts.length)];
 
-        document.body.appendChild(roast);
-    }
+    overlay.style = `
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:50%;
+      background:black;
+      color:white;
+      font-size:40px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:999999;
+      text-align:center;
+    `;
+
+    document.body.appendChild(overlay);
+
+  }
 
 });
 
@@ -44,4 +51,21 @@ let scrollCount = 0;
 
 window.addEventListener("scroll", () => {
     scrollCount++;
+    console.log("Scroll count:", scrollCount);
+    if (scrollCount % 10 === 0) {
+        applyShrink();
+    }
+
 });
+
+function applyShrink() {
+    // Max shrink factor (e.g., 70% of original size)
+    const maxShrink = 0.3;
+    
+    // Calculate shrink based on scrollCount (1 scroll = tiny shrink)
+    let scale = Math.max(maxShrink, 1 - scrollCount * 0.002); 
+
+    // Apply transform to the whole page
+    document.body.style.transform = `scale(${scale})`;
+    document.body.style.transformOrigin = "top center";
+}

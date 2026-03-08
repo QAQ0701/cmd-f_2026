@@ -1,17 +1,19 @@
+let timePerTab = {};
 
-let totalTime = 0;
-console.log("Service worker started");
+chrome.runtime.onMessage.addListener((msg, sender) => {
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (msg.type === "PING") {
 
-    if (message.type === "TIME_UPDATE") {
-        totalTime += message.time;
+    const tabId = sender.tab.id;
 
-        if (totalTime > 5) { // 5 minutes
-            chrome.tabs.sendMessage(sender.tab.id, {
-                type: "SHOW_ROAST"
-            });
-        }
+    if (!timePerTab[tabId]) {
+      timePerTab[tabId] = 0;
     }
 
+    timePerTab[tabId] += 10;
+
+    if (timePerTab[tabId] > 10) { // 20 s for testing
+      chrome.tabs.sendMessage(tabId, { type: "ROAST" });
+    }
+  }
 });

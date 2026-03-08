@@ -3,7 +3,7 @@
   "name": "DoomScroll Terminator",
   "version": "1.0",
   "description": "Terminates the doom scrolling in social media wesite",
-  "permissions": ["storage", "tabs"],
+  "permissions": ["storage", "tabs", "alarms", "notifications"],
   "host_permissions": [
     "*://*.youtube.com/*",
     "*://*.reddit.com/*",

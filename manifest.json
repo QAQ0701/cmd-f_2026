@@ -43,7 +43,20 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["images/stage2.png", "images/grass.png", "images/avatar128.png", "images/Boo.gif"],
+      "resources": [
+        "images/stage2.png",
+        "images/grass.png",
+        "images/avatar16.png",
+        "images/avatar32.png",
+        "images/avatar48.png",
+        "images/avatar128.png",
+        "images/Boo.gif",
+        "images/avatar_profile_your_boss.png",
+        "images/avatar_profile_snape.png",
+        "images/avatar_profile_miku.png",
+        "images/avatar_profile_default.png",
+        "images/avatar_profile_asian_mom.png"
+      ],
       "matches": [
         "https://www.facebook.com/*",
         "https://www.instagram.com/*",

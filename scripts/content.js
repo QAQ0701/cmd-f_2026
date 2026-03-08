@@ -284,7 +284,8 @@ function stageFour() {
   console.log("Stage4 triggered");
   const overlay = document.createElement("div");
   const imgURL = chrome.runtime.getURL("images/Boo.gif");
-
+  const numScrolls = scrollCount / 10;
+  const timeSpent = elapsedTime/60000;
   const style = document.createElement("style");
 
   style.textContent = `
@@ -309,6 +310,10 @@ function stageFour() {
     <h1 id="doomTitle"> Your screen is mine now</h1>
       <img src="${imgURL}" style="max-width:500px;">
       <br><br>
+      <h1> You used your fingers
+      <span id="numScrolls"></span> times and you wasted 
+      <span id="timeSpent"></span> minutes of your life
+      </h1>
     </div>
   `;
 
@@ -327,6 +332,8 @@ function stageFour() {
   `;
 
   document.body.appendChild(overlay);
+  document.getElementById("numScrolls").textContent = numScrolls.toFixed(0);
+  document.getElementById("timeSpent").textContent = timeSpent.toFixed(0);
 }
 
 function firstWarning() {

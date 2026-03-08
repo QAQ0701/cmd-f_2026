@@ -55,7 +55,7 @@ window.addEventListener("scroll", () => {
     if (scrollCount % 20 === 0) {
         applyShrink();
     }
-    if (scrollCount > 150 && !stageTwoTriggered) {
+    if (scrollCount > 30 && !stageTwoTriggered) {
       stageTwoTriggered = true;
       stageTwo();
       console.log("Stage 2");
@@ -89,12 +89,16 @@ function stageTwo() {
 
   overlay.innerHTML = `
     <div style="text-align:center">
-      <h1>Go Touch Grass</h1>
-      <img src="${imgURL}" style="max-width:300px;">
+      <img src="${imgURL}" style="max-width:500px;">
       <br><br>
-      <button id="exitBtn"> I touched grass
-        <img src="${imgGrass}" style="max-width:100px;">
-      </button>
+    <button id="exitBtn" style="
+      padding:0;
+      border:none;
+      background:none;
+      cursor:pointer;
+    ">
+      <img src="${imgGrass}" style="width:250px; height:auto; display:block;">
+    </button>
     </div>
   `;
   
@@ -104,7 +108,7 @@ function stageTwo() {
     left:0;
     width:100%;
     height:100%;
-    background:black;
+    background-color: rgba(0, 0, 0, 0.9);
     color:white;
     display:flex;
     align-items:center;
